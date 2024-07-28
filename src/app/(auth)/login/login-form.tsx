@@ -15,8 +15,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
 import envConfig from "@/config";
+import { useAppContext } from "@/app/AppProvider";
 
 const LoginForm = () => {
+  const { setSessionToken } = useAppContext();
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
@@ -27,22 +29,65 @@ const LoginForm = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: LoginBodyType) {
-    const result = await fetch(
-      `${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/login`,
-      {
-        body: JSON.stringify(values),
+    try {
+      const result = await fetch(
+        `${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/login`,
+        {
+          body: JSON.stringify(values),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+        }
+      ).then(async (res) => {
+        const payload = await res.json();
+        const data = {
+          status: res.status,
+          payload,
+        };
+        if (!res.ok) {
+          throw data;
+        }
+        return data;
+      });
+      toast.success(result.payload.message);
+      const resultFromNextServer = await fetch("/api/auth", {
+        method: "POST",
+        body: JSON.stringify(result),
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
+      }).then(async (res) => {
+        const payload = await res.json();
+        const data = {
+          status: res.status,
+          payload,
+        };
+        if (!res.ok) {
+          throw data;
+        }
+        return data;
+      });
+      setSessionToken(resultFromNextServer.payload.data.token);
+    } catch (error: any) {
+      const errors = error.payload?.errors as {
+        field: string;
+        message: string;
+      }[];
+      const status = error.status as number;
+      if (status === 422) {
+        errors.forEach((error) => {
+          form.setError(error.field as "email" | "password", {
+            type: "server",
+            message: error.message,
+          });
+        });
+      } else {
+        toast.error(error.message);
       }
-    ).then((res) => res.json());
-    if (result.data) {
-      toast.success(result.message);
-    } else if (result.statusCode === 422) {
-      toast.error(result.message);
     }
   }
+
   return (
     <Form {...form}>
       <form
