@@ -8,8 +8,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchRequest = async () => {
       try {
-        const result = await accountApiRequest.meClient();
-        console.log(result);
+        await accountApiRequest.meClient();
       } catch (error: any) {
         handleErrorApi({ error });
       }
