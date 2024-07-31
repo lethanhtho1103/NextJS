@@ -11,7 +11,7 @@ export default function AuthLayout({
       <body>
         <Header />
         {children}
-        <Toaster position="top-right" richColors />
+        <Toaster position="top-right" richColors duration={3000} />
         <footer>Auth layout</footer>
       </body>
     </html>
