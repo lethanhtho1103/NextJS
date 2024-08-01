@@ -1,12 +1,16 @@
 import envConfig from "@/config";
 import { LoginResType } from "@/schemaValidations/auth.schema";
 import { normalizePath } from "./utils";
+import { redirect } from "next/navigation";
 
 type CustomOptions = Omit<RequestInit, "method"> & {
   baseUrl?: string | undefined;
 };
 
 const ENTITY_STATUS_ERROR = 422;
+const AUTHENTICATION_ERROR_STATUS = 401;
+let clientLogoutRequest: null | Promise<any> = null;
+
 type EntityErrorPayload = {
   message: string;
   errors: {
@@ -99,6 +103,27 @@ const request = async <Response>(
           payload: EntityErrorPayload;
         }
       );
+    } else if (res.status === AUTHENTICATION_ERROR_STATUS) {
+      if (typeof window !== "undefined") {
+        if (!clientLogoutRequest) {
+          clientLogoutRequest = fetch("api/auth/logout", {
+            method: "POST",
+            body: JSON.stringify({ force: true }),
+            headers: {
+              ...baseHeaders,
+            },
+          });
+        }
+        await clientLogoutRequest;
+        clientSessionToken.value = "";
+        clientLogoutRequest = null;
+        redirect("/login");
+      } else {
+        const sessionToken = (options?.headers as any)?.Authorization.split(
+          "Bearer "
+        )[1];
+        redirect(`/logout?sessionToken=${sessionToken}`);
+      }
     } else {
       throw new HttpError(data);
     }
