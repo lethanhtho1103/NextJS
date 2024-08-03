@@ -36,9 +36,12 @@ const LoginForm = () => {
     setLoading(true);
     try {
       const result = await authApiRequest.login(values);
-      toast.success(result.payload.message);
-      await authApiRequest.auth({ sessionToken: result.payload.data.token });
+      await authApiRequest.auth({
+        sessionToken: result.payload.data.token,
+        expiresAt: result.payload.data.expiresAt,
+      });
       router.push("/me");
+      toast.success(result.payload.message);
     } catch (error: any) {
       handleErrorApi({ error, setError: form.setError });
     } finally {

@@ -42,7 +42,10 @@ const RegisterForm = () => {
     try {
       const result = await authApiRequest.register(values);
       toast.success(result.payload.message);
-      await authApiRequest.auth({ sessionToken: result.payload.data.token });
+      await authApiRequest.auth({
+        sessionToken: result.payload.data.token,
+        expiresAt: result.payload.data.expiresAt,
+      });
       router.push("/me");
     } catch (error: any) {
       handleErrorApi({ error, setError: form.setError });

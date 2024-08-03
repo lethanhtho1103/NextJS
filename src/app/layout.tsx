@@ -4,6 +4,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import AppProvider from "./AppProvider";
 import { cookies } from "next/headers";
+import SlideSession from "@/components/slide-session";
 
 const roboto = Roboto({
   subsets: ["vietnamese"],
@@ -33,6 +34,7 @@ export default function RootLayout({
         >
           <AppProvider inititalSessionToken={sessionToken?.value}>
             {children}
+            <SlideSession />
           </AppProvider>
         </ThemeProvider>
       </body>
