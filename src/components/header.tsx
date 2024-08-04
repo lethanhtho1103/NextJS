@@ -6,6 +6,10 @@ export default function Header() {
   return (
     <div>
       <ul>
+        <ModeToggle />
+        <li>
+          <Link href="/products/add">Đăng nhập</Link>
+        </li>
         <li>
           <Link href="/login">Đăng nhập</Link>
         </li>
@@ -14,7 +18,6 @@ export default function Header() {
         </li>
         <ButtonLogOut />
       </ul>
-      <ModeToggle />
     </div>
   );
 }
