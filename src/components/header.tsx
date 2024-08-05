@@ -8,7 +8,7 @@ export default function Header() {
       <ul>
         <ModeToggle />
         <li>
-          <Link href="/products/add">Đăng nhập</Link>
+          <Link href="/products">Sản phẩm</Link>
         </li>
         <li>
           <Link href="/login">Đăng nhập</Link>

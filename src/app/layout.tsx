@@ -6,6 +6,7 @@ import AppProvider from "./AppProvider";
 import { cookies } from "next/headers";
 import SlideSession from "@/components/slide-session";
 import { Toaster } from "@/components/ui/sonner";
+import Header from "@/components/header";
 
 const roboto = Roboto({
   subsets: ["vietnamese"],
@@ -35,6 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AppProvider inititalSessionToken={sessionToken?.value}>
+            <Header />
             {children}
             <SlideSession />
           </AppProvider>

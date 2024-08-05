@@ -12,14 +12,17 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { describe } from "node:test";
+import Link from "next/link";
 
 export default async function ProductLists() {
   const { payload } = await productApiRequest.getList();
   const productList = payload.data;
-  console.log(productList);
   return (
     <>
       <h1>Danh sách sản phẩm</h1>
+      <Link href={"/products/add"}>
+        <Button>Thêm sản phẩm</Button>
+      </Link>
       <Table>
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
@@ -48,7 +51,9 @@ export default async function ProductLists() {
                   />
                 </TableCell>
                 <TableCell className="flex space-x-2">
-                  <Button variant={"outline"}>Sửa</Button>
+                  <Link href={`/products/${product.id}`}>
+                    <Button variant={"outline"}>Sửa</Button>
+                  </Link>
                   <Button variant={"destructive"}>Xóa</Button>
                 </TableCell>
               </TableRow>
