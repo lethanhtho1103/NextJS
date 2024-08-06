@@ -11,11 +11,12 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { describe } from "node:test";
 import Link from "next/link";
+import DeleteAlertDialog from "./_components/delete-alert-dialog";
 
 export default async function ProductLists() {
   const { payload } = await productApiRequest.getList();
+  console.log(payload.data);
   const productList = payload.data;
   return (
     <>
@@ -54,7 +55,7 @@ export default async function ProductLists() {
                   <Link href={`/products/${product.id}`}>
                     <Button variant={"outline"}>Sửa</Button>
                   </Link>
-                  <Button variant={"destructive"}>Xóa</Button>
+                  <DeleteAlertDialog product={product} />
                 </TableCell>
               </TableRow>
             );

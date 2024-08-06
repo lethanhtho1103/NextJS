@@ -9,7 +9,6 @@ export default function AuthLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
         {children}
         <footer>Auth layout</footer>
       </body>

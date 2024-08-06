@@ -56,6 +56,7 @@ const ProductAddForm = ({ product }: { product?: Product }) => {
         image: imageUrl,
       });
       router.push("/products");
+
       toast.success(result.payload.message);
     } catch (error: any) {
       handleErrorApi({ error, setError: form.setError });
@@ -79,7 +80,6 @@ const ProductAddForm = ({ product }: { product?: Product }) => {
           image: imageUrl,
         };
       }
-
       const result = await productApiRequest.update(product.id, values);
       toast.success(result.payload.message);
     } catch (error: any) {
@@ -93,8 +93,10 @@ const ProductAddForm = ({ product }: { product?: Product }) => {
     if (loading) return;
     if (product) {
       await updateProduct(values);
+      router.refresh();
     } else {
       await createProduct(values);
+      router.refresh();
     }
   }
 
