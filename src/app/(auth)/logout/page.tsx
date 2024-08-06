@@ -20,6 +20,7 @@ export default function Logout() {
           router.push(`/login?redirectFrom=${pathname}`);
         });
     }
+
     return () => {
       controller.abort();
     };
