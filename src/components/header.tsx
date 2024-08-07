@@ -1,18 +1,10 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import Link from "next/link";
 import ButtonLogOut from "./button-logout";
-import { cookies } from "next/headers";
-import authApiRequest from "@/apiRequests/auth";
-import accountApiRequest from "@/apiRequests/account";
+import { AccountResType } from "@/schemaValidations/account.schema";
 
-export default async function Header() {
-  const cookiesStore = cookies();
-  const sessionToken = cookiesStore.get("sessionToken")?.value;
-  let user = null;
-  if (sessionToken) {
-    const result = await accountApiRequest.me(sessionToken);
-    user = result.payload.data;
-  }
+type User = AccountResType["data"];
+export default async function Header({ user }: { user: User | null }) {
   return (
     <div>
       <ul>
